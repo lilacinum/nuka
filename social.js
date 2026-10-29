@@ -331,8 +331,7 @@
     if (!body) return;
     ui.dmInput.value = "";
     try {
-      var message = await backend.sendDm(activePeer, body);
-      if (message && (!backend.enabled() || !backend.getSession())) appendMessage(message);
+      await backend.sendDm(activePeer, body);
     } catch (error) { toast(error.message); }
   }
 
