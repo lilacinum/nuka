@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#111317" />
+  <title>Nuka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-button menu-button" id="menuButton" aria-label="Open navigation">☰</button>
+      <a class="brand" href="#home" aria-label="Nuka home">
+        <span class="brand-mark"></span>
+        <span>NUKA</span>
+      </a>
+
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input id="globalSearch" type="search" placeholder="Search experiences and people" autocomplete="off" />
+        <kbd>/</kbd>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-button notification-button" id="notificationButton" aria-label="Notifications">
+          ♢
+          <span class="badge" id="notificationBadge">0</span>
+        </button>
+        <button class="profile-chip" id="profileChip" aria-label="Open profile">
+          <span class="mini-avatar" id="topAvatar">E</span>
+          <span class="profile-chip-name" id="topUsername">Eddie</span>
+        </button>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+      <nav class="side-nav">
+        <button class="nav-item active" data-route="home"><span>⌂</span>Home</button>
+        <button class="nav-item" data-route="discover"><span>◫</span>Discover</button>
+        <button class="nav-item" data-route="friends"><span>◎</span>Friends</button>
+        <button class="nav-item" data-route="profile"><span>◇</span>Profile</button>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="side-section">
+        <p class="side-label">QUICK LINKS</p>
+        <button class="text-link" data-route="friends" data-subroute="requests">Friend requests <span id="requestCount">0</span></button>
+        <button class="text-link" data-route="discover">Recently played</button>
+        <button class="text-link" data-route="discover">Favorites</button>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card-icon">✦</div>
+        <div>
+          <strong>Nuka Studio</strong>
+          <p>Creator tools are coming next.</p>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main" id="mainContent">
+      <section class="route active" id="route-home">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">WELCOME BACK</p>
+            <h1 id="welcomeTitle">Good evening, Eddie.</h1>
+            <p class="hero-copy">Jump back into something you played, see what your friends are doing, or find something new.</p>
+          </div>
+          <button class="primary-button" data-route="discover">Explore Nuka</button>
+        </div>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <h2>Continue</h2>
+              <p>Pick up where you left off.</p>
+            </div>
+            <button class="section-link" data-route="discover">See all</button>
+          </div>
+          <div class="game-grid compact" id="continueGrid"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <h2>Friends</h2>
+              <p>People you might want to join.</p>
+            </div>
+            <button class="section-link" data-route="friends">View friends</button>
+          </div>
+          <div class="people-strip" id="friendsStrip"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <h2>Recommended for you</h2>
+              <p>Based on your favorites and recent activity.</p>
+            </div>
+          </div>
+          <div class="game-grid" id="recommendedGrid"></div>
+        </section>
+      </section>
+
+      <section class="route" id="route-discover">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">EXPLORE</p>
+            <h1>Discover</h1>
+            <p>Find worlds, hangouts, competitive games, and experiments made for Nuka.</p>
+          </div>
+          <div class="segmented" id="discoverFilter">
+            <button class="active" data-filter="all">All</button>
+            <button data-filter="popular">Popular</button>
+            <button data-filter="favorites">Favorites</button>
+          </div>
+        </div>
+        <div class="game-grid" id="discoverGrid"></div>
+        <div class="empty-state hidden" id="discoverEmpty">
+          <div class="empty-icon">⌕</div>
+          <h3>No experiences found</h3>
+          <p>Try a different search or filter.</p>
+        </div>
+      </section>
+
+      <section class="route" id="route-friends">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">SOCIAL</p>
+            <h1>Friends</h1>
+            <p>Manage friends, requests, and people you may know.</p>
+          </div>
+          <button class="secondary-button" id="addFriendButton">+ Add friend</button>
+        </div>
+
+        <div class="tab-row" id="friendsTabs">
+          <button class="active" data-tab="all">Friends <span id="friendsCount">0</span></button>
+          <button data-tab="requests">Requests <span id="requestsTabCount">0</span></button>
+          <button data-tab="suggested">Suggested</button>
+        </div>
+
+        <div class="friend-list" id="friendList"></div>
+      </section>
+
+      <section class="route" id="route-profile">
+        <div class="profile-banner">
+          <div class="profile-avatar large" id="profileAvatar">E</div>
+          <div class="profile-identity">
+            <p class="eyebrow">PROFILE</p>
+            <h1 id="profileUsername">Eddie</h1>
+            <p id="profileHandle">@eddie</p>
+          </div>
+          <button class="secondary-button profile-edit-button" id="editProfileButton">Edit profile</button>
+        </div>
+
+        <div class="profile-grid">
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>About</h2>
+            </div>
+            <p class="about-copy" id="profileBio"></p>
+            <div class="stat-grid">
+              <div><strong id="statFriends">0</strong><span>Friends</span></div>
+              <div><strong id="statFavorites">0</strong><span>Favorites</span></div>
+              <div><strong id="statPlayed">0</strong><span>Played</span></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Currently wearing</h2>
+            </div>
+            <div class="avatar-preview">
+              <div class="avatar-figure">
+                <span class="avatar-head"></span>
+                <span class="avatar-torso"></span>
+                <span class="avatar-arm left"></span>
+                <span class="avatar-arm right"></span>
+                <span class="avatar-leg left"></span>
+                <span class="avatar-leg right"></span>
+              </div>
+              <div>
+                <strong>Classic Block Avatar</strong>
+                <p>3D editor integration can plug into this panel next.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <h2>Favorites</h2>
+              <p>Experiences you saved.</p>
+            </div>
+          </div>
+          <div class="game-grid compact" id="profileFavorites"></div>
+        </section>
+      </section>
+    </main>
+
+    <aside class="notification-drawer" id="notificationDrawer" aria-hidden="true">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">INBOX</p>
+          <h2>Notifications</h2>
+        </div>
+        <button class="icon-button" id="closeNotifications" aria-label="Close notifications">×</button>
+      </div>
+      <div class="notification-list" id="notificationList"></div>
+      <button class="drawer-footer-button" id="markAllRead">Mark all as read</button>
+    </aside>
+
+    <div class="scrim" id="scrim"></div>
+  </div>
+
+  <dialog class="modal" id="profileModal">
+    <form method="dialog" id="profileForm">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">PROFILE</p>
+          <h2>Edit profile</h2>
+        </div>
+        <button class="icon-button" value="cancel" type="submit">×</button>
+      </div>
+      <label>
+        Display name
+        <input id="editDisplayName" maxlength="24" required />
+      </label>
+      <label>
+        Username
+        <div class="input-prefix"><span>@</span><input id="editUsername" maxlength="20" required /></div>
+      </label>
+      <label>
+        Bio
+        <textarea id="editBio" maxlength="160" rows="4"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button class="secondary-button" value="cancel" type="submit">Cancel</button>
+        <button class="primary-button" value="default" id="saveProfileButton">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="addFriendModal">
+    <form method="dialog" id="addFriendForm">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">SOCIAL</p>
+          <h2>Add a friend</h2>
+        </div>
+        <button class="icon-button" value="cancel" type="submit">×</button>
+      </div>
+      <label>
+        Username
+        <div class="input-prefix"><span>@</span><input id="friendUsername" maxlength="20" placeholder="username" required /></div>
+      </label>
+      <p class="form-note">Demo mode creates a local outgoing request. Supabase can replace this with real account lookup.</p>
+      <div class="modal-actions">
+        <button class="secondary-button" value="cancel" type="submit">Cancel</button>
+        <button class="primary-button" value="default" id="sendFriendRequestButton">Send request</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
