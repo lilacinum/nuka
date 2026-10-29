@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="features.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -26,6 +27,8 @@
       </div>
 
       <div class="topbar-actions">
+        <button class="account-button" id="accountButton">Demo mode</button>
+        <button class="icon-button" id="messagesButton" aria-label="Messages">◌</button>
         <button class="icon-button notification-button" id="notificationButton" aria-label="Notifications">
           ♢
           <span class="badge" id="notificationBadge">0</span>
@@ -71,7 +74,10 @@
             <h1 id="welcomeTitle">Good evening, Eddie.</h1>
             <p class="hero-copy">Jump back into something you played, see what your friends are doing, or find something new.</p>
           </div>
-          <button class="primary-button" data-route="discover">Explore Nuka</button>
+          <div class="hero-actions">
+            <button class="secondary-button" id="enterWorldButton">Enter Lobby</button>
+            <button class="primary-button" data-route="discover">Explore Nuka</button>
+          </div>
         </div>
 
         <section class="content-section">
@@ -135,7 +141,10 @@
             <h1>Friends</h1>
             <p>Manage friends, requests, and people you may know.</p>
           </div>
-          <button class="secondary-button" id="addFriendButton">+ Add friend</button>
+          <div class="hero-actions">
+            <button class="secondary-button" id="findPeopleButton">Find people</button>
+            <button class="secondary-button" id="addFriendButton">+ Add friend</button>
+          </div>
         </div>
 
         <div class="tab-row" id="friendsTabs">
@@ -160,9 +169,7 @@
 
         <div class="profile-grid">
           <section class="panel">
-            <div class="panel-heading">
-              <h2>About</h2>
-            </div>
+            <div class="panel-heading"><h2>About</h2></div>
             <p class="about-copy" id="profileBio"></p>
             <div class="stat-grid">
               <div><strong id="statFriends">0</strong><span>Friends</span></div>
@@ -172,21 +179,23 @@
           </section>
 
           <section class="panel">
-            <div class="panel-heading">
-              <h2>Currently wearing</h2>
-            </div>
+            <div class="panel-heading"><h2>Currently wearing</h2></div>
             <div class="avatar-preview">
-              <div class="avatar-figure">
-                <span class="avatar-head"></span>
-                <span class="avatar-torso"></span>
-                <span class="avatar-arm left"></span>
-                <span class="avatar-arm right"></span>
-                <span class="avatar-leg left"></span>
-                <span class="avatar-leg right"></span>
+              <div class="avatar-mini" id="avatarMiniPreview">
+                <span class="head"></span>
+                <span class="torso"></span>
+                <span class="arm left"></span>
+                <span class="arm right"></span>
+                <span class="leg left"></span>
+                <span class="leg right"></span>
               </div>
               <div>
                 <strong>Classic Block Avatar</strong>
-                <p>3D editor integration can plug into this panel next.</p>
+                <p>Customize colors and proportions in the 3D editor, then use the same avatar in Lobby.</p>
+                <div class="avatar-preview-actions">
+                  <button class="small-button primary" id="editAvatarButton">Edit avatar</button>
+                  <button class="small-button" id="enterWorldButtonProfile" onclick="document.getElementById('enterWorldButton').click()">Enter Lobby</button>
+                </div>
               </div>
             </div>
           </section>
@@ -206,14 +215,25 @@
 
     <aside class="notification-drawer" id="notificationDrawer" aria-hidden="true">
       <div class="drawer-header">
-        <div>
-          <p class="eyebrow">INBOX</p>
-          <h2>Notifications</h2>
-        </div>
+        <div><p class="eyebrow">INBOX</p><h2>Notifications</h2></div>
         <button class="icon-button" id="closeNotifications" aria-label="Close notifications">×</button>
       </div>
       <div class="notification-list" id="notificationList"></div>
       <button class="drawer-footer-button" id="markAllRead">Mark all as read</button>
+    </aside>
+
+    <aside class="dm-drawer" id="dmDrawer" aria-hidden="true">
+      <div class="dm-header">
+        <strong id="dmPeer">Messages</strong>
+        <button class="icon-button" id="closeDm" aria-label="Close messages">×</button>
+      </div>
+      <div class="dm-messages" id="dmMessages">
+        <div class="dm-empty">Choose a person to start messaging.</div>
+      </div>
+      <form class="dm-form" id="dmForm">
+        <input id="dmInput" maxlength="1000" placeholder="Message…" autocomplete="off" />
+        <button class="primary-button">Send</button>
+      </form>
     </aside>
 
     <div class="scrim" id="scrim"></div>
@@ -222,24 +242,12 @@
   <dialog class="modal" id="profileModal">
     <form method="dialog" id="profileForm">
       <div class="modal-header">
-        <div>
-          <p class="eyebrow">PROFILE</p>
-          <h2>Edit profile</h2>
-        </div>
+        <div><p class="eyebrow">PROFILE</p><h2>Edit profile</h2></div>
         <button class="icon-button" value="cancel" type="submit">×</button>
       </div>
-      <label>
-        Display name
-        <input id="editDisplayName" maxlength="24" required />
-      </label>
-      <label>
-        Username
-        <div class="input-prefix"><span>@</span><input id="editUsername" maxlength="20" required /></div>
-      </label>
-      <label>
-        Bio
-        <textarea id="editBio" maxlength="160" rows="4"></textarea>
-      </label>
+      <label>Display name<input id="editDisplayName" maxlength="24" required /></label>
+      <label>Username<div class="input-prefix"><span>@</span><input id="editUsername" maxlength="20" required /></div></label>
+      <label>Bio<textarea id="editBio" maxlength="160" rows="4"></textarea></label>
       <div class="modal-actions">
         <button class="secondary-button" value="cancel" type="submit">Cancel</button>
         <button class="primary-button" value="default" id="saveProfileButton">Save changes</button>
@@ -250,17 +258,11 @@
   <dialog class="modal" id="addFriendModal">
     <form method="dialog" id="addFriendForm">
       <div class="modal-header">
-        <div>
-          <p class="eyebrow">SOCIAL</p>
-          <h2>Add a friend</h2>
-        </div>
+        <div><p class="eyebrow">SOCIAL</p><h2>Add a friend</h2></div>
         <button class="icon-button" value="cancel" type="submit">×</button>
       </div>
-      <label>
-        Username
-        <div class="input-prefix"><span>@</span><input id="friendUsername" maxlength="20" placeholder="username" required /></div>
-      </label>
-      <p class="form-note">Demo mode creates a local outgoing request. Supabase can replace this with real account lookup.</p>
+      <label>Username<div class="input-prefix"><span>@</span><input id="friendUsername" maxlength="20" placeholder="username" required /></div></label>
+      <p class="form-note">Demo mode creates a local outgoing request. With Supabase configured, use Find people for real accounts.</p>
       <div class="modal-actions">
         <button class="secondary-button" value="cancel" type="submit">Cancel</button>
         <button class="primary-button" value="default" id="sendFriendRequestButton">Send request</button>
@@ -268,9 +270,97 @@
     </form>
   </dialog>
 
+  <dialog class="modal modal-compact" id="authModal">
+    <form id="authForm">
+      <div class="modal-header">
+        <div><p class="eyebrow">ACCOUNT</p><h2>Nuka account</h2></div>
+        <button class="icon-button" type="button" onclick="document.getElementById('authModal').close()">×</button>
+      </div>
+      <div class="auth-mode-toggle">
+        <select id="authMode" aria-label="Authentication mode">
+          <option value="signin">Sign in</option>
+          <option value="signup">Create account</option>
+        </select>
+        <button type="button" id="authSwitch">Need an account?</button>
+      </div>
+      <label>Email<input id="authEmail" type="email" autocomplete="email" required /></label>
+      <label>Password<input id="authPassword" type="password" minlength="6" autocomplete="current-password" required /></label>
+      <label class="hidden" id="authUsernameRow">Username<div class="input-prefix"><span>@</span><input id="authUsername" maxlength="20" /></div></label>
+      <label class="hidden" id="authDisplayNameRow">Display name<input id="authDisplayName" maxlength="24" /></label>
+      <p class="auth-status" id="authStatus"></p>
+      <div class="modal-actions"><button class="primary-button" id="authSubmit">Sign in</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal modal-compact" id="peopleModal">
+    <div style="padding:20px">
+      <div class="modal-header">
+        <div><p class="eyebrow">PEOPLE</p><h2>Find players</h2></div>
+        <button class="icon-button" type="button" onclick="document.getElementById('peopleModal').close()">×</button>
+      </div>
+      <div class="people-search-wrap"><input id="peopleSearch" placeholder="Search username or display name" autocomplete="off" /></div>
+      <div class="people-results" id="peopleResults"></div>
+    </div>
+  </dialog>
+
+  <dialog class="modal modal-compact" id="publicProfileModal">
+    <div style="padding:20px">
+      <div class="modal-header">
+        <div><p class="eyebrow">PLAYER</p><h2>Profile</h2></div>
+        <button class="icon-button" type="button" onclick="document.getElementById('publicProfileModal').close()">×</button>
+      </div>
+      <div id="publicProfileBody"></div>
+      <div class="modal-actions">
+        <button class="secondary-button" id="publicProfileAdd" type="button">Add friend</button>
+        <button class="primary-button" id="publicProfileMessage" type="button">Message</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="modal modal-wide" id="avatarModal">
+    <div style="padding:20px">
+      <div class="modal-header">
+        <div><p class="eyebrow">AVATAR</p><h2>Avatar editor</h2></div>
+        <button class="icon-button" type="button" onclick="document.getElementById('avatarModal').close()">×</button>
+      </div>
+      <div class="avatar-editor-grid">
+        <div class="avatar-canvas" id="avatarCanvas"></div>
+        <div class="avatar-controls">
+          <label>Skin<input type="color" id="avatarSkin" value="#d3a17d"></label>
+          <label>Shirt<input type="color" id="avatarShirt" value="#33465f"></label>
+          <label>Pants<input type="color" id="avatarPants" value="#252b34"></label>
+          <label>Head size<input type="range" id="avatarHeadScale" min=".8" max="1.25" step=".05" value="1"></label>
+          <label>Body width<input type="range" id="avatarBodyScale" min=".8" max="1.25" step=".05" value="1"></label>
+          <div class="avatar-control-row">
+            <button class="secondary-button" id="randomizeAvatar" type="button">Randomize</button>
+            <button class="primary-button" id="saveAvatar" type="button">Save avatar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="world-modal" id="worldModal">
+    <div class="world-shell">
+      <div class="world-canvas" id="worldCanvas"></div>
+      <div class="world-hud">
+        <span class="world-pill">NUKA LOBBY</span>
+        <span class="world-pill" id="worldPresence">Connecting…</span>
+      </div>
+      <button class="icon-button world-close" id="closeWorld" type="button" aria-label="Leave lobby">×</button>
+      <div class="world-help">WASD / arrows to move · Space to jump · Shift to run · drag to rotate camera</div>
+    </div>
+  </dialog>
+
   <div class="toast-stack" id="toastStack"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
   <script src="config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="avatar3d.js"></script>
+  <script src="world.js"></script>
   <script src="app.js"></script>
+  <script src="social.js"></script>
 </body>
 </html>
